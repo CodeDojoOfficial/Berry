@@ -7,7 +7,7 @@
 </h1>
 
 <p align="center">
-  <a href="/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge" alt="license - MIT"></a>
+  <a href="/LICENSE"><img src="https://img.shields.io/github/license/CodeDojoOfficial/Berry.svg?style=for-the-badge" alt="license - MIT"></a>
   <a href="../../releases/latest"><img src="https://img.shields.io/badge/release-1.0.0__0-blue.svg?style=for-the-badge" alt="release - 1.0.0_0"></a>
   <a href="../../releases/latest"><img src="https://img.shields.io/badge/BDK-0-red.svg?style=for-the-badge" alt="BDK 0"></a>
 </p>
