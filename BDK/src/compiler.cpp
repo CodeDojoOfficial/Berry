@@ -195,7 +195,7 @@ int main(int argc, char** argv) {
       break;
     case PRIM_LEFT: // '<'
       clmn++;
-      output_ << tabs << "  memoryPointer--; memoryPointer %= 8;" << std::endl; // Loop around if overflow or negative occurs.
+      output_ << tabs << "  memoryPointer += 7;  memoryPointer %= 8;" << std::endl; // Loop around if overflow or negative occurs.
       break;
     case PRIM_PRINT: // '.'
       clmn++;
