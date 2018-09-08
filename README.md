@@ -37,16 +37,16 @@ This section will show you the utmost basics of how to operate the Berry system 
 
 ## Installation
 
-To install Berry, go to the [`latest release`](https://github.com/CodeDojoOfficial/Berry/releases/latest) page and download the installer for your OS.
+To install Berry, go to the [`latest release`](https://github.com/CodeDojoOfficial/Berry/releases/latest) page and download the zip file.
 
 Once you move it to your desired location, open up a terminal and navigate to it using `cd`.
 
 ```bash
 $ cd ${YOUR_PATH}
-$ sudo source ${INSTALLER_FILENAME}
+$ unzip ${ZIPFILE}
 ```
 
-Good! Now you have installed Berry on your computer! You can delete the installer and start programming!
+Good! Now you have installed Berry on your computer! You can delete the zip and start programming!
 
 ## First Program: Bang!
 
