@@ -8,7 +8,6 @@
 
 // Runtime error codes
 #define ERR_UNKNOWN 1
-#define ERR_LOOP    2
 
 // Compiler error codes
 #define CMPLERR_UNKNOWN 128
@@ -25,6 +24,7 @@
 #define PRIM_INPUT ','
 #define PRIM_LOOP0 '['
 #define PRIM_LOOP1 ']'
+#define PRIM_MODE  '$' // Two modes: Character and Numerical (Deals with IO).
 
 #endif // __BERRY_COMPILER_INITIALIZED__
 
@@ -78,17 +78,19 @@ int main(int argc, char** argv) {
   
   bool input_set = false;
   std::string input_filename = "";
+  
+  bool debug = false;                    // Triggered by: -d --debug
 
   // RECOGNIZE COMPILER COMMAND LINE ARGUMENTS
   for(int i = 1; i < argc; ++i) { // Skip script name agrument
-    if(c_str_equality(argv[i], "-v") || c_str_equality(argv[i], "--verbose")) {
+    if(c_str_equality(argv[i], "-v") || c_str_equality(argv[i], "--verbose")) { // Produce verbose output
       if(verbose) {
         std::cerr << "Duplicate option: " << argv[i] << std::endl;
         return CMPLERR_OPTION;
       }
 
       verbose = true;
-    } else if(c_str_equality(argv[i], "-o") || c_str_equality(argv[i], "--output")) {
+    } else if(c_str_equality(argv[i], "-o") || c_str_equality(argv[i], "--output")) { // Produce an executable with the given name
       if(output_set) {
         std::cerr << "Duplicate option: " << argv[i] << std::endl;
         return CMPLERR_OPTION;
@@ -100,6 +102,13 @@ int main(int argc, char** argv) {
       }
 
       output_filename = std::string(argv[++i]); // Skip the next input
+    } else if(c_str_equality(argv[i], "-d") || c_str_equality(argv[i], "--debug")) { // Enables compile-time remnants (For debug)
+      if(debug) {
+        std::cerr << "Duplicate option: " << argv[i] << std::endl;
+        return CMPLERR_OPTION;
+      }
+
+      debug = true;
     } else if(argv[i][0] == '-') {
       std::cerr << "Unknown option: " << argv[i] << std::endl;
       return CMPLERR_OPTION;
@@ -163,11 +172,12 @@ int main(int argc, char** argv) {
           << " */" << std::endl;
   
   output_ << "#include <iostream>" << std::endl << std::endl;
-
+  
   output_ << "int main(int argc, char** argv) {" << std::endl;
   
   output_ << "  char memory[8] = {\'\\0\', \'\\0\', \'\\0\', \'\\0\', \'\\0\', \'\\0\', \'\\0\', \'\\n\'};" << std::endl;
   output_ << "  int memoryPointer = 0;" << std::endl;
+  output_ << "  std::string input_str;" << std::endl;
   output_ << "  " << std::endl;
   
   int line = 1;
@@ -176,6 +186,8 @@ int main(int argc, char** argv) {
   int openLoops = 0; // LoopError thrown if openLoops is 0, and the lexer discovers a ']'.
 
   std::string tabs = ""; // Used when an indent occurs, such as a loop
+  
+  bool character_mode = true; // Switched off and on by '$' PRIM_MODE
 
   // LEXING AND CODE INSERTION
   for(int i = 0; i < stackLength; ++i) {
@@ -197,13 +209,26 @@ int main(int argc, char** argv) {
       clmn++;
       output_ << tabs << "  memoryPointer += 7;  memoryPointer %= 8;" << std::endl; // Loop around if overflow or negative occurs.
       break;
+
+    // IO CASES
     case PRIM_PRINT: // '.'
       clmn++;
-      output_ << tabs << "  std::cout << memory[memoryPointer];" << std::endl;
+      
+      if(character_mode) {
+        output_ << tabs << "  std::cout << memory[memoryPointer];" << std::endl;
+      } else {
+        output_ << tabs << "  std::cout << (int8_t unsigned)(memory[memoryPointer]);" << std::endl;
+      }
+
       break;
     case PRIM_INPUT: // ','
       clmn++;
-      output_ << tabs << "  std::cin >> memory[memoryPointer];" << std::endl;
+      if(character_mode) {
+        output_ << tabs << "  std::cin >> memory[memoryPointer];" << std::endl;
+      } else {
+        output_ << tabs << "  std::getline(std::cin, input_str); memory[memoryPointer] = atoi(input_str.c_str());" << std::endl;
+      }
+
       break;
     case PRIM_LOOP0: // '['
     case PRIM_LOOP1: // ']'
@@ -219,6 +244,10 @@ int main(int argc, char** argv) {
       } else { // ']'
         if(openLoops == 0) {
           throwError(StackTraceElement(input_filename, line, clmn), ErrorMessage("LoopError", "Found an ending bracket, but there was no open loops"));
+          
+          output_.close();
+          system(std::string(std::string("rm ") + output_filename + std::string(".cpp")).c_str()); // close and delete file
+
           return CMPLERR_LOOP;
         } else {
           output_ << tabs << "  " << std::endl;
@@ -237,6 +266,8 @@ int main(int argc, char** argv) {
         }
       }
       break;
+    case PRIM_MODE:
+      character_mode = !character_mode; // Invert the mode.
     default:
       if(token == '\n') {
         line++;
@@ -250,6 +281,10 @@ int main(int argc, char** argv) {
   
   if(openLoops != 0) {
     throwError(StackTraceElement(input_filename, line, clmn), ErrorMessage("LoopError", "Found EOF before all loops were closed"));
+    
+    output_.close();
+    system(std::string(std::string("rm ") + output_filename + std::string(".cpp")).c_str()); // close and delete file
+
     return CMPLERR_LOOP;
   }
 
@@ -269,8 +304,14 @@ int main(int argc, char** argv) {
   if(verbose) {
     std::cout << "done." << std::endl;
   }
+  
+  if(debug) {
+    system(std::string(std::string("chmod 444 ") + output_filename + std::string(".cpp")).c_str()); // read-only on all levels
+  }
 
-  system(std::string(std::string("chmod 444 ") + std::string(output_filename) + std::string(".cpp")).c_str()); // read-only on all levels
+  if(!debug) {
+    system(std::string(std::string("rm ") + output_filename + std::string(".cpp")).c_str()); // Debug remnants are not active.
+  }
 
   return EXIT_SUCCESS;
 }

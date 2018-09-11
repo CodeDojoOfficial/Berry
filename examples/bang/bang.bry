@@ -1,0 +1,7 @@
+This is the very first program written in Berry! It writes a bang
+(!) to stdout!
+
++++++ +++++ +++++ +++++ +++++ +++++ ++ Get to space
++ . Get to the bang and print it
+
+>>>>> >> . Print \n

@@ -1,0 +1,13 @@
+This program takes input and multiplies it by two! It is then
+outputted to stdout afterwards
+
+$ Change the input/output mode (Experimental)
+
+> , Take the input
+
+[
+  < ++++ Multiplying by two
+  > -  
+] < Get back to first cell
+
+. >>>>> >> $ . Print the end value and the newline (in character form)

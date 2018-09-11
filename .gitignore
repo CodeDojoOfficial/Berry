@@ -1,7 +1,4 @@
 # GITIGNORE FILE FOR /
-# Berry source files
-*.bry
-
 # OS generated files
 .DS_Store
 .DS_Store?

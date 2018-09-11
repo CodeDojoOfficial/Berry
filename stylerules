@@ -1,5 +1,5 @@
 ===============================================================================
-=           B e r r y   S t y l e   R u l e s     -     Version 1.0           =
+=           B e r r y   S t y l e   R u l e s     -     Version 1.1           =
 ===============================================================================
 
      Welcome to the Berry Styling Guidlines Cheatsheet for getting the
@@ -57,16 +57,27 @@
      Note that you can use this rule and break it down into 4 or even 3 in
      each group of commands.
 
-     Move onto lesson 1.3 to learn about formatting loops.
+     Move onto lesson 1.3 to learn about the "Length Rule."
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                        Lesson 1.3: FORMATTING LOOPS
+                         Lesson 1.3: THE LENGTH RULE
+
+     In this lesson, you will learn about the length rule. It effects the
+     number of command characters in a line.
+
+     The length rule states that you can have, at maximum, 80 characters,
+     command or comment, in each line. This does not effect possible tabs
+     or spaces before any actual code.
+
+     Move onto lesson 1.4 to learn about formatting loops.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        Lesson 1.4: FORMATTING LOOPS
 
      In this lesson you will learn how to format loops. This is
      especially important because this formatting rule is only true 50% of
      the time. So this lesson will be split into two parts. Part 1: Opened
      loops. Part 2: Inline loops (the exception to this rule).
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                Lesson 1.3.1: FORMATTING LOOPS: OPENED LOOPS
+                Lesson 1.4.1: FORMATTING LOOPS: OPENED LOOPS
 
      An opened loop is defined as one that is "unfolded," as most IDEs
      like to call it. Below is an example of an opened loop.
@@ -80,7 +91,7 @@
      if it were a method from another language, you enter and indent. This
      is called an opened loop.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                Lesson 1.3.2: FORMATTING LOOPS: INLINE LOOPS
+                Lesson 1.4.2: FORMATTING LOOPS: INLINE LOOPS
 
      An inline loop, as the name suggests, is a loop that is in a straight
      line of code. It is not indented. Although this is the exception to
